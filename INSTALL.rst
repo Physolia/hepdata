@@ -29,7 +29,9 @@ Running services locally
 Prerequisites
 =============
 
-HEPData uses several services, which you will need to install before running HEPData:
+HEPData runs with **python 3.6**.
+
+HEPData also uses several services, which you will need to install before running HEPData:
  * `PostgreSQL <http://www.postgresql.org/>`_ (version 9.6) database server
  * `Redis <http://redis.io/>`_ for caching
  * `Elasticsearch <https://www.elastic.co/products/elasticsearch>`_ (version 7.1, not later versions) for indexing and information retrieval. See below for further instructions.
@@ -37,6 +39,7 @@ HEPData uses several services, which you will need to install before running HEP
 
 These services can be installed using the relevant package manager for your system,
 for example, using ``yum`` or ``apt-get`` for Linux or ``brew`` for macOS.
+
 
 Elasticsearch
 -------------
@@ -73,13 +76,18 @@ using `virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/en/latest/ins
 
 .. code-block:: console
 
-   $ mkvirtualenv hepdata
+   $ mkvirtualenv hepdata -p python3.6
    (hepdata)$ mkdir ~/src/
    (hepdata)$ cd ~/src/
    (hepdata)$ git clone https://github.com/HEPData/hepdata.git
    (hepdata)$ cd hepdata
    (hepdata)$ pip install --upgrade pip
    (hepdata)$ pip install -e .[all] --upgrade -r requirements.txt
+   (hepdata)$ export FLASK_ENV=development
+
+The last line sets an environment variable to switch Flask to run in development
+mode. You may want to set this automatically in your virtualenv; to do so add a
+line ``export FLASK_ENV=development`` to ``~/.virtualenvs/hepdata/bin/postactivate``.
 
 Use of config_local.py
 ----------------------
@@ -170,11 +178,10 @@ server (e.g. ``sudo systemctl restart postgresql-9.6``).
 Run a local development server
 ------------------------------
 
-Now, switch Flask to the development environment and enable debug mode, then start the HEPData web application:
+Now, start the HEPData web application in debug mode:
 
 .. code-block:: console
 
-   (hepdata)$ export FLASK_ENV=development
    (hepdata)$ hepdata run --debugger --reload
    (hepdata)$ firefox http://localhost:5000/
 
